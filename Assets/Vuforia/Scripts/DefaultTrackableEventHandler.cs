@@ -15,27 +15,34 @@ namespace Vuforia
                                                 ITrackableEventHandler
     {
         #region PRIVATE_MEMBER_VARIABLES
- 
         private TrackableBehaviour mTrackableBehaviour;
-    
+        private bool isRendered = false;
         #endregion // PRIVATE_MEMBER_VARIABLES
 
-
+        #region PUBLIC_MEMBER_VARIABLES
+        public Animator anim;
+        #endregion // PUBLIC_MEMBER_VARIABLES
 
         #region UNTIY_MONOBEHAVIOUR_METHODS
-    
+
         void Start()
         {
             mTrackableBehaviour = GetComponent<TrackableBehaviour>();
+            anim = GetComponent<Animator>();
             if (mTrackableBehaviour)
             {
                 mTrackableBehaviour.RegisterTrackableEventHandler(this);
             }
         }
-
+        // Update is called once per frame
+        void Update()
+        {
+            if (isRendered)
+            {
+                anim.Play("TAKE 001", -1, 0f);
+            }
+        }
         #endregion // UNTIY_MONOBEHAVIOUR_METHODS
-
-
 
         #region PUBLIC_METHODS
 
@@ -52,10 +59,12 @@ namespace Vuforia
                 newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
             {
                 OnTrackingFound();
+                isRendered = true;
             }
             else
             {
                 OnTrackingLost();
+                isRendered = false;
             }
         }
 
